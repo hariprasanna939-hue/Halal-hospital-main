@@ -20,6 +20,7 @@ import ContactPage from "./pages/ContactPage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import DoctorAvailability from "./pages/admin/DoctorAvailability";
 import HospitalProfilePage from "./pages/admin/HospitalProfilePage";
+import HospitalOnboardingPage from "./pages/admin/HospitalOnboardingPage";
 import DepartmentsPage from "./pages/admin/DepartmentsPage";
 import AnnouncementsPage from "./pages/admin/AnnouncementsPage";
 import AccountSettingsPage from "./pages/admin/AccountSettingsPage";
@@ -66,6 +67,7 @@ const App = () => (
               <Route path="/admin/announcements" element={<AnnouncementsPage />} />
               <Route path="/admin/settings" element={<AccountSettingsPage />} />
               <Route path="/admin/patients" element={<PatientOverview />} />
+              <Route path="/admin/onboarding" element={<HospitalOnboardingPage />} />
             </Route>
             <Route path="/admin/preview" element={<PatientHospitalPreview />} />
           </Route>
