@@ -40,7 +40,7 @@ export default function HospitalsPage() {
   useEffect(() => {
     const fetchHospitals = async () => {
       try {
-        const data = await api.get("/hospitals");
+        const data = await api.get("/hospital");
         console.log("Fetched Hospitals:", data);
         setHospitals(data);
       } catch (err) {
@@ -212,7 +212,7 @@ export default function HospitalsPage() {
                   whileInView="visible"
                   viewport={{ once: true }}
                   custom={i}
-                  onClick={() => navigate(`/hospitals/${h._id}/preview`)}
+                  onClick={() => navigate(`/hospital/${h._id}`)}
                   className="group relative bg-white rounded-[32px] overflow-hidden border border-slate-200/60 hover:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] transition-all duration-700 flex flex-col cursor-pointer"
                 >
                   {/* Image Container */}

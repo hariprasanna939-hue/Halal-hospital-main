@@ -8,6 +8,7 @@ import { socket } from "@/lib/socket";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MedicalInquiryModal from "@/components/MedicalInquiryModal";
+import HospitalBannerView from "@/components/HospitalBannerView";
 
 const PatientHospitalPreview = () => {
     const [hospital, setHospital] = useState<any>(null);
@@ -77,33 +78,8 @@ const PatientHospitalPreview = () => {
                 </div>
             )}
 
-            {/* 🔵 Banner */}
-            <div className="relative h-[340px] w-full overflow-hidden">
-                <img
-                    src={hospital?.bannerImage || "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=2900"}
-                    alt="Hospital Banner"
-                    className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-[#0B0F19]/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
-                    <div className="max-w-5xl mx-auto w-full">
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                        >
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-600 text-[10px] text-white font-bold uppercase tracking-widest mb-4">
-                                Verified Healthcare Facility
-                            </div>
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter">
-                                {hospital?.name || "Hospital Name"}
-                            </h1>
-                            <p className="text-slate-300 text-lg md:text-xl mt-4 font-light max-w-2xl leading-relaxed">
-                                {hospital?.description || "A premier healthcare facility dedicated to providing world-class medical services and compassionate patient care."}
-                            </p>
-                        </motion.div>
-                    </div>
-                </div>
-            </div>
+            {/* 🔵 Banner Area (Componentized) */}
+            <HospitalBannerView hospital={hospital} />
 
             {/* 🏥 Main Content */}
             <div className="max-w-5xl mx-auto px-6 py-12">

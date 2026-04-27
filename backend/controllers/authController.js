@@ -17,13 +17,7 @@ exports.registerAdmin = async (req, res) => {
             name: hospitalName || `${fullName}'s Hospital`,
             city: "General",
             country: "India",
-            services: [
-                "Cardiac Surgery",
-                "Oncology Treatments",
-                "Advanced Orthopedics",
-                "Neurological Care",
-                "Diagnostic Imaging"
-            ]
+            onboardingStatus: "pending"
         });
 
         const user = await User.create({
@@ -111,6 +105,32 @@ exports.updateProfile = async (req, res) => {
                 mobileNumber: user.mobileNumber
             }
         });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: "Server Error" });
+    }
+};
+
+// HOSPITAL LOGIN BY MOBILE
+exports.hospitalLogin = async (req, res) => {
+    try {
+        const { mobile } = req.body;
+        if (!mobile) return res.status(400).json({ msg: "Mobile number is required" });
+
+        const user = await User.findOne({ mobileNumber: mobile });
+        if (!user) return res.status(401).json({ msg: "Mobile number not registered" });
+
+        if (user.role !== "hospital_admin" && user.role !== "hospital") {
+            return res.status(403).json({ msg: "Not a hospital admin account" });
+        }
+
+        const token = jwt.sign(
+            { id: user._id, role: user.role, hospitalId: user.hospitalId },
+            process.env.JWT_SECRET || "supersecretkey",
+            { expiresIn: "1h" }
+        );
+
+        res.json({ token, role: user.role, hospitalId: user.hospitalId });
     } catch (err) {
         console.error(err);
         res.status(500).json({ msg: "Server Error" });

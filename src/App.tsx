@@ -21,12 +21,15 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import DoctorAvailability from "./pages/admin/DoctorAvailability";
 import HospitalProfilePage from "./pages/admin/HospitalProfilePage";
 import HospitalOnboardingPage from "./pages/admin/HospitalOnboardingPage";
+import InquiriesPage from "./pages/admin/InquiriesPage";
+import SuperAdminInquiries from "./pages/admin/SuperAdminInquiries";
 import DepartmentsPage from "./pages/admin/DepartmentsPage";
 import AnnouncementsPage from "./pages/admin/AnnouncementsPage";
 import AccountSettingsPage from "./pages/admin/AccountSettingsPage";
 import PatientOverview from "./pages/admin/PatientOverview";
 import PatientHospitalPreview from "./pages/PatientHospitalPreview";
 import PatientProfilePage from "./pages/PatientProfilePage";
+import HospitalPublicDetails from "./pages/HospitalPublicDetails";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -64,6 +67,8 @@ const App = () => (
               <Route path="/admin/doctors" element={<DoctorAvailability />} />
               <Route path="/admin/profile" element={<HospitalProfilePage />} />
               <Route path="/admin/departments" element={<DepartmentsPage />} />
+              <Route path="/admin/inquiries" element={<InquiriesPage />} />
+              <Route path="/admin/coordination" element={<SuperAdminInquiries />} />
               <Route path="/admin/announcements" element={<AnnouncementsPage />} />
               <Route path="/admin/settings" element={<AccountSettingsPage />} />
               <Route path="/admin/patients" element={<PatientOverview />} />
@@ -81,6 +86,7 @@ const App = () => (
 
           <Route element={<PublicLayout />}>
             <Route path="/hospitals/:id/preview" element={<PatientHospitalPreview />} />
+            <Route path="/hospital/:id" element={<HospitalPublicDetails />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

@@ -70,16 +70,22 @@ const MedicalInquiryForm = ({ hospitalName }: { hospitalName?: string }) => {
 
     setLoading(true);
     try {
-      const formData = new FormData();
-      Object.keys(form).forEach(key => formData.append(key, form[key]));
-      files.forEach(file => formData.append("reports", file));
+      const hospitalId = localStorage.getItem("lastViewedHospitalId");
 
-      await api.postFormData("/inquiry", formData);
-      toast.success("Inquiry submitted successfully!");
+      const payload = {
+        hospitalId,
+        patientName: form.patientName,
+        patientEmail: form.email,
+        patientPhone: form.phone,
+        message: form.condition || form.message,
+        treatmentInterest: form.specialty || form.treatmentType
+      };
+
+      await api.post("/inquiry", payload);
+      toast.success("Inquiry sent to hospital!");
       setShowModal(true);
       // Reset form
       setForm({ hospitalName: hospitalName || "" });
-      setFiles([]);
       setAgreed(false);
     } catch (err) {
       toast.error("Failed to submit inquiry. Please try again.");

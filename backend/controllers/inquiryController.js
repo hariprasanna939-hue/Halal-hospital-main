@@ -1,25 +1,85 @@
 const Inquiry = require("../models/Inquiry");
-const uploadToCloudinary = require("../utils/uploadToCloudinary");
 
-exports.createInquiry = async (req, res) => {
+exports.submitInquiry = async (req, res) => {
     try {
-        let reportUrls = [];
-
-        if (req.files && req.files.length > 0) {
-            for (let file of req.files) {
-                const url = await uploadToCloudinary(file.buffer, "medical_reports");
-                reportUrls.push(url);
-            }
-        }
-
-        const inquiry = await Inquiry.create({
-            ...req.body,
-            reports: reportUrls,
+        const { hospitalId, ...rest } = req.body;
+        const inquiry = new Inquiry({
+            ...rest,
+            sourceHospitalId: hospitalId // Track which hospital they were looking at
         });
-
-        res.json({ msg: "Inquiry submitted successfully", inquiry });
+        await inquiry.save();
+        res.status(201).json({ msg: "Inquiry submitted successfully", inquiry });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ msg: "Submission failed" });
+        res.status(500).json({ msg: "Server Error" });
+    }
+};
+
+exports.getSuperAdminInquiries = async (req, res) => {
+    try {
+        const inquiries = await Inquiry.find()
+            .populate("hospitalId", "name")
+            .populate("sourceHospitalId", "name")
+            .sort("-createdAt");
+        res.json(inquiries);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: "Server Error" });
+    }
+};
+
+exports.assignHospitalToInquiry = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { hospitalId } = req.body;
+
+        const inquiry = await Inquiry.findByIdAndUpdate(
+            id,
+            { hospitalId, status: "in-progress" },
+            { new: true }
+        ).populate("hospitalId", "name");
+
+        if (!inquiry) return res.status(404).json({ msg: "Inquiry not found" });
+
+        res.json({ msg: "Inquiry assigned to hospital", inquiry });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: "Server Error" });
+    }
+};
+
+exports.getHospitalInquiries = async (req, res) => {
+    try {
+        const { id } = req.params; // hospitalId
+
+        // PRIVACY LOGIC: Only show inquiries SPECIFICALLY ASSIGNED to this hospital
+        const inquiries = await Inquiry.find({ hospitalId: id })
+            .select("-patientEmail -patientPhone") // Exclude sensitive fields
+            .sort("-createdAt");
+
+        res.json(inquiries);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: "Server Error" });
+    }
+};
+
+exports.updateInquiryStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        const inquiry = await Inquiry.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        ).select("-patientEmail -patientPhone");
+
+        if (!inquiry) return res.status(404).json({ msg: "Inquiry not found" });
+
+        res.json(inquiry);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: "Server Error" });
     }
 };

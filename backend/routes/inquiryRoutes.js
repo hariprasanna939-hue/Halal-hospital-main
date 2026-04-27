@@ -1,7 +1,20 @@
 const router = require("express").Router();
-const upload = require("../config/multer");
-const { createInquiry } = require("../controllers/inquiryController");
+const auth = require("../middleware/auth");
+const { superAdminOnly } = require("../middleware/roles");
+const {
+    submitInquiry,
+    getHospitalInquiries,
+    updateInquiryStatus,
+    getSuperAdminInquiries,
+    assignHospitalToInquiry
+} = require("../controllers/inquiryController");
 
-router.post("/", upload.array("reports", 5), createInquiry);
+router.post("/", submitInquiry);
+router.get("/hospital/:id", auth, getHospitalInquiries);
+router.patch("/:id/status", auth, updateInquiryStatus);
+
+// Super Admin Coordination
+router.get("/all", auth, superAdminOnly, getSuperAdminInquiries);
+router.post("/assign/:id", auth, superAdminOnly, assignHospitalToInquiry);
 
 module.exports = router;

@@ -1,26 +1,24 @@
 const mongoose = require("mongoose");
 
 const inquirySchema = new mongoose.Schema({
+    hospitalId: { type: mongoose.Schema.Types.ObjectId, ref: "Hospital" }, // Final assigned hospital
+    sourceHospitalId: { type: mongoose.Schema.Types.ObjectId, ref: "Hospital" }, // Original hospital clicked
+    patientId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+
     patientName: { type: String, required: true },
-    gender: String,
-    age: String,
-    country: String,
-    city: String,
-    phone: { type: String, required: true },
-    email: String,
-    condition: String,
-    diagnosis: String,
-    symptoms: String,
-    duration: String,
-    treatmentType: String,
-    specialty: String,
-    preferredHospital: String,
-    preferredCity: String,
-    medicalHistory: String,
-    medications: String,
-    passport: String,
-    travelReady: String,
-    reports: [String], // Array of Cloudinary URLs
+    patientEmail: { type: String, required: true },
+    patientPhone: { type: String, required: true },
+
+    message: { type: String, required: true },
+    treatmentInterest: { type: String },
+
+    status: {
+        type: String,
+        enum: ["new", "in-progress", "resolved"],
+        default: "new"
+    },
+
+    createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 
 module.exports = mongoose.model("Inquiry", inquirySchema);

@@ -74,4 +74,17 @@ export const api = {
         });
         return handleResponse(res);
     },
+
+    patch: async (url: string, data: any) => {
+        const token = localStorage.getItem("token");
+        const res = await fetch(`${API_URL}${url}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": token || ""
+            },
+            body: JSON.stringify(data),
+        });
+        return handleResponse(res);
+    },
 };
