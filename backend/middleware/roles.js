@@ -1,12 +1,12 @@
 const roles = {
     hospitalOnly: (req, res, next) => {
-        if (req.user.role !== "hospital") {
+        if (req.user.role !== "hospital" && req.user.role !== "hospital_admin") {
             return res.status(403).json({ msg: "Hospital access only" });
         }
         next();
     },
     superAdminOnly: (req, res, next) => {
-        if (req.user.role !== "admin") {
+        if (req.user.role !== "admin" && req.user.role !== "super_admin") {
             return res.status(403).json({ msg: "Super Admin access only" });
         }
         next();
